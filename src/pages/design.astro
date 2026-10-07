@@ -1,0 +1,273 @@
+---
+import "../styles/global.css";
+
+const cores = [
+  {
+    token: "--background",
+    papel: "Fundo do site (o papel)",
+    light: "oklch(0.96 0.014 85)",
+    dark: "oklch(0.21 0.011 73)",
+    hex: "#f6f1e7 / #191510",
+  },
+  {
+    token: "--foreground",
+    papel: "Texto padrão sobre o papel",
+    light: "oklch(0.27 0.013 72)",
+    dark: "oklch(0.92 0.023 85)",
+    hex: "#2b2620 / #e8e0cf",
+    contraste: "13.3:1 / 13.8:1",
+  },
+  {
+    token: "--muted-foreground",
+    papel: "Texto secundário: datas, descrições",
+    light: "oklch(0.5 0.024 79)",
+    dark: "oklch(0.69 0.034 78)",
+    hex: "#6b6254 / #a09278",
+    contraste: "5.3:1 / 6.0:1",
+  },
+  {
+    token: "--primary",
+    papel: "Ações e links: a voz do acento",
+    light: "oklch(0.51 0.123 45)",
+    dark: "oklch(0.76 0.112 68)",
+    hex: "#9c4a1f / #dfa05c",
+    contraste: "5.5:1 / 8.1:1",
+  },
+  {
+    token: "--primary-strong",
+    papel: "Hover das ações e links",
+    light: "oklch(0.43 0.109 44)",
+    dark: "oklch(0.84 0.092 71)",
+    hex: "#7e3714 / #f0c087",
+  },
+  {
+    token: "--border",
+    papel: "Bordas e separadores",
+    light: "oklch(0.87 0.031 84)",
+    dark: "oklch(0.33 0.018 74)",
+    hex: "#ddd2bd / #352e24",
+  },
+];
+
+const ritmo = [
+  { token: "space-1", valor: "4px", uso: "detalhes micro (ícone-texto)" },
+  { token: "space-2", valor: "8px", uso: "dentro de componentes" },
+  { token: "space-3", valor: "12px", uso: "entre elementos relacionados" },
+  { token: "space-4", valor: "16px", uso: "padding base de cards/nav" },
+  { token: "space-6", valor: "24px", uso: "entre parágrafos" },
+  { token: "space-8", valor: "32px", uso: "entre seções do post" },
+  { token: "space-12", valor: "48px", uso: "separação de blocos grandes" },
+  { token: "space-16", valor: "64px", uso: "respiro vertical de páginas" },
+  { token: "space-24", valor: "96px", uso: "hero/aberturas" },
+];
+---
+
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <link
+      rel="preload"
+      href="/fonts/source-serif-4-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <title>Design System</title>
+    <script is:inline>
+      (function () {
+        var stored = null;
+        try {
+          stored = localStorage.getItem("color-theme");
+        } catch (e) {}
+        var theme =
+          stored === "dark" || stored === "paper"
+            ? stored
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "paper";
+        if (theme === "dark") {
+          document.documentElement.classList.add("dark");
+        }
+        document.documentElement.style.colorScheme =
+          theme === "dark" ? "dark" : "light";
+      })();
+      function toggleTheme() {
+        var isDark = document.documentElement.classList.toggle("dark");
+        try {
+          localStorage.setItem("color-theme", isDark ? "dark" : "paper");
+        } catch (e) {}
+        document.documentElement.style.colorScheme = isDark ? "dark" : "light";
+      }
+    </script>
+  </head>
+  <body class="bg-background text-foreground font-sans min-h-screen">
+    <main class="mx-auto max-w-3xl px-6 pt-16 pb-24 space-y-16">
+      <header class="flex items-center justify-between">
+        <a
+          href="/"
+          class="text-primary hover:text-(--primary-strong) underline underline-offset-4"
+        >
+          Voltar
+        </a>
+        <button
+          type="button"
+          onclick="toggleTheme()"
+          class="border border-border rounded px-3 py-2 hover:bg-accent hover:text-accent-foreground"
+        >
+          Alternar tema
+        </button>
+      </header>
+
+      <section class="space-y-6">
+        <h1 class="text-3xl font-bold">Design System</h1>
+        <p class="text-muted-foreground">
+          A verificação viva dos tokens das issues #18 (cores), #19 (fontes) e
+          #20 (espaçamento). Cada seção mostra o token, o papel dele e o valor
+          real em uso.
+        </p>
+      </section>
+
+      <section class="space-y-6" id="cores">
+        <h2 class="text-2xl font-bold">Cores</h2>
+        <p class="text-muted-foreground">
+          Um matiz-âncora de âmbar, dois temas: paper e dark. Contrastes medidos
+          no par de texto (valor light / valor dark), piso AA 4.5:1.
+        </p>
+        <div class="space-y-2" id="swatches">
+          {cores.map((c) => (
+            <div class="border border-border rounded p-3 flex flex-wrap gap-4 items-center">
+              <span
+                class="inline-block w-10 h-10 rounded border border-border shrink-0"
+                style={`background: var(${c.token});`}
+              />
+              <div class="flex-1 min-w-52">
+                <code class="text-primary font-mono text-sm">{c.token}</code>
+                <p class="text-sm text-muted-foreground">{c.papel}</p>
+              </div>
+              <div class="text-sm font-mono text-muted-foreground text-right">
+                <div>
+                  {c.light} / {c.dark}
+                </div>
+                <div class="text-xs">{c.hex}</div>
+                {c.contraste && (
+                  <div class="text-xs mt-1">Contraste: {c.contraste}</div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="space-y-6" id="tipografia">
+        <h2 class="text-2xl font-bold">Tipografia</h2>
+        <p class="text-muted-foreground">
+          Duas vozes: system-ui na interface e nos headings, Source Serif 4
+          (self-hosted, variável 400–700) no corpo de post. Código em mono do
+          sistema.
+        </p>
+
+        <div class="space-y-4">
+          <h3 class="text-xl font-bold border-b border-border pb-2">
+            Heading (system-ui)
+          </h3>
+          <h4 class="text-lg font-bold border-b border-border pb-2">
+            Subheading (system-ui)
+          </h4>
+          <p class="text-sm text-muted-foreground">
+            Metadado e texto de interface, também system-ui.
+          </p>
+        </div>
+
+        <article class="space-y-4 border border-border rounded p-6 bg-card text-card-foreground">
+          <h3 class="font-serif text-lg">
+            Parágrafo de corpo (Source Serif 4, 18px/1.5)
+          </h3>
+          <p class="font-serif text-lg" style="line-height: 1.5;">
+            A leitura longa pede superfície quente, tipografia serifada e ritmo
+            constante. Este parágrafo usa exatamente o combo decidido: a serif
+            self-hosted carregada em um único woff2, corpo de 18px e entrelinha
+            de 1.5, sobre o papel do tema que você está vendo agora. Troque o
+            tema acima e repare como o mesmo texto continua confortável em paper
+            e dark.
+          </p>
+          <p class="font-serif text-lg" style="line-height: 1.5;">
+            Link de exemplo com a cor do{" "}
+            <a
+              href="#cores"
+              class="text-primary hover:text-(--primary-strong) underline underline-offset-4"
+            >
+              acento
+            </a>
+            ,<em>itálico</em> e <strong>negrito</strong> no meio da prosa.
+          </p>
+          <pre class="font-mono text-sm bg-muted rounded p-4 overflow-x-auto"><code>{`const theme = stored ?? sistema ?? "paper";`}</code></pre>
+        </article>
+      </section>
+
+      <section class="space-y-6" id="ritmo">
+        <h2 class="text-2xl font-bold">Ritmo</h2>
+        <p class="text-muted-foreground">
+          Escala de 4px, cada passo com papel fixo. A visualização de cada
+          swatch equivale ao valor real.
+        </p>
+        <div class="space-y-2">
+          {ritmo.map((r) => (
+            <div class="flex items-center gap-4">
+              <span
+                class="inline-block h-4 rounded bg-primary/25 border border-border shrink-0"
+                style={`width: ${r.valor};`}
+              />
+              <code class="font-mono text-sm text-primary w-20">{r.token}</code>
+              <span class="font-mono text-sm text-muted-foreground w-14">
+                {r.valor}
+              </span>
+              <span class="text-sm text-muted-foreground">{r.uso}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="space-y-6" id="leitura-real">
+        <h2 class="text-2xl font-bold">Leitura real</h2>
+        <p class="text-muted-foreground">
+          Um trecho de post dentro da measure de 65ch centrada, com os elementos
+          que um post de verdade carrega.
+        </p>
+        <article
+          class="font-serif text-lg mx-auto"
+          style="max-width: 65ch; margin-inline: auto; line-height: 1.5; display: flex; flex-direction: column; gap: 24px;"
+        >
+          <h3 class="font-sans font-bold text-xl">Um título de post</h3>
+          <p>
+            Quando abro um post, quero chegar ao texto sem obstáculos: a medida
+            de linha curta o caminho do olho, o papel reduz o cansaço e o ritmo
+            entre parágrafos mantém a página previsível. Nada aqui muda de
+            tamanho conforme o conteúdo, porque o espaçamento deriva de uma
+            escala, não de julgamento caso a caso.
+          </p>
+          <p>
+            Os elementos inline aparecem com a voz correta:{" "}
+            <a href="#cores" class="text-primary underline underline-offset-4">
+              links com o acento
+            </a>
+            , nomes de função como{" "}
+            <code class="font-mono text-sm">toggleTheme()</code> no mono do
+            sistema, e itálico que o próprio serif resolve.
+          </p>
+          <blockquote class="pl-4 border-l-2 border-primary italic">
+            Citação de terceiro, com a barra no acento e o ritmo preservado.
+          </blockquote>
+          <p>
+            E o post termina sem surpresas: a navegação de volta fica onde o
+            leitor espera, o espaçamento final usa o mesmo token da abertura, e
+            o tema continua resolvendo pela precedência que a #18 definiu.
+          </p>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>
