@@ -1,46 +1,17 @@
 ---
-import "../styles/global.css";
+import Layout from "../layouts/Layout.astro";
 ---
 
-<html lang="pt-br">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="generator" content={Astro.generator} />
-    <link
-      rel="preload"
-      href="/fonts/source-serif-4-latin.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <title>Em construção</title>
-    <script is:inline>
-      (function () {
-        var stored = null;
-        try {
-          stored = localStorage.getItem("color-theme");
-        } catch (e) {}
-        var theme =
-          stored === "dark" || stored === "paper"
-            ? stored
-            : window.matchMedia("(prefers-color-scheme: dark)").matches
-              ? "dark"
-              : "paper";
-        if (theme === "dark") {
-          document.documentElement.classList.add("dark");
-        }
-        document.documentElement.style.colorScheme =
-          theme === "dark" ? "dark" : "light";
-      })();
-    </script>
-  </head>
-  <body>
-    <h1>Em construção</h1>
-    <p>
-      <a href="/design">Design System</a>
+<Layout title="Em construção">
+  <main class="mx-auto max-w-3xl px-6 pt-16 pb-24">
+    <h1 class="text-3xl font-bold">Em construção</h1>
+    <p class="mt-4 text-muted-foreground">
+      <a
+        href="/design"
+        class="text-primary underline underline-offset-4 hover:text-(--primary-strong)"
+      >
+        Design System
+      </a>
     </p>
-  </body>
-</html>
+  </main>
+</Layout>

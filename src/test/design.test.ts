@@ -41,12 +41,25 @@ describe("issue #30: página /design", () => {
   });
 
   it("toggle paper/dark: script puro com precedência da #18", () => {
+    const layout = readFileSync(
+      resolve(root, "src/layouts/Layout.astro"),
+      "utf-8",
+    );
+    expect(layout).toContain('rel="preload"');
+    // a precedência vive no ThemeScript, fonte única do script de tema
+    const theme = readFileSync(
+      resolve(root, "src/components/ThemeScript.astro"),
+      "utf-8",
+    );
+    expect(theme).toContain("prefers-color-scheme");
     const src = page();
-    expect(src).toContain('rel="preload"');
-    expect(src).toContain("color-theme");
-    expect(src).toContain("localStorage");
-    expect(src).toContain("prefers-color-scheme");
-    expect(src).toMatch(/classList\.toggle\(['"]dark['"]/);
+    // o toggle vivo agora é da navbar global (#25); a página demonstra os temas
+    const navbar = readFileSync(
+      resolve(root, "src/components/Navbar.astro"),
+      "utf-8",
+    );
+    expect(navbar).toContain("toggleTheme()");
+    expect(navbar).toContain('aria-label="Alternar tema"');
   });
 
   it("linkado a partir da home", () => {

@@ -24,8 +24,11 @@ describe("issue #21: fonte serif self-hosted (#19)", () => {
     expect(css).toContain("/fonts/source-serif-4-latin.woff2");
   });
 
-  it("index.astro precarrega o woff2 da fonte do corpo", () => {
-    const page = readFileSync(resolve(root, "src/pages/index.astro"), "utf-8");
+  it("Layout precarrega o woff2 da fonte do corpo", () => {
+    const page = readFileSync(
+      resolve(root, "src/layouts/Layout.astro"),
+      "utf-8",
+    );
     expect(page).toContain('rel="preload"');
     expect(page).toContain("/fonts/source-serif-4-latin.woff2");
     expect(page).toContain("font/woff2");

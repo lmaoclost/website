@@ -1,0 +1,37 @@
+---
+import "../styles/global.css";
+import ThemeScript from "../components/ThemeScript.astro";
+import Navbar from "../components/Navbar.astro";
+
+interface Props {
+  title: string;
+  preloadSerif?: boolean;
+}
+
+const { title, preloadSerif = false } = Astro.props;
+---
+
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    {preloadSerif && (
+      <link
+        rel="preload"
+        href="/fonts/source-serif-4-latin.woff2"
+        as="font"
+        type="font/woff2"
+        crossorigin
+      />
+    )}
+    <title>{title}</title>
+    <ThemeScript />
+  </head>
+  <body class="bg-background text-foreground font-sans min-h-screen">
+    <Navbar />
+    <slot />
+  </body>
+</html>
