@@ -13,8 +13,8 @@ describe("issue #30: página /design", () => {
 
   it("seção de tokens de cor: swatch + oklch + hex da #18", () => {
     const src = page();
-    expect(src).toContain("oklch(0.96 0.014 85)");
-    expect(src).toContain("#f6f1e7");
+    expect(src).toContain("oklch(0.95 0.028 84)");
+    expect(src).toContain("#f3eccf");
     expect(src).toContain("oklch(0.21 0.011 73)");
     expect(src).toContain("Contraste");
   });

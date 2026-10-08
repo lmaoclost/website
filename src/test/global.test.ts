@@ -23,7 +23,7 @@ describe("issue #21: tailwind v4 + tokens", () => {
 
   it("paper: tokens oklch da issue #18 em :root", () => {
     const css = readFileSync(resolve(root, "src/styles/global.css"), "utf-8");
-    expect(css).toContain("--background: oklch(0.96 0.014 85)");
+    expect(css).toContain("--background: oklch(0.95 0.028 84)");
     expect(css).toContain("--foreground: oklch(0.27 0.013 72)");
     expect(css).toContain("--primary: oklch(0.51 0.123 45)");
   });
