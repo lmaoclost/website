@@ -24,9 +24,9 @@ describe("issue #25: Navbar", () => {
   it("brand + itens de nav Blog/Projects/About com rota atual oculta", () => {
     const navbar = read("src/components/Navbar.astro");
     expect(navbar).toContain("RENAN");
-    expect(navbar).toContain('"/blog"');
     expect(navbar).toContain('"/projects"');
     expect(navbar).toContain('"/about"');
+    expect(navbar).not.toContain('"/blog"');
     expect(navbar).toContain("it.href");
     expect(navbar).toContain("it.nome");
     // lógica de ocultar item atual: compara pathname

@@ -4,19 +4,14 @@ import MobileMenu from "./MobileMenu.astro";
 const pathname = Astro.url.pathname;
 
 const itens = [
-  { nome: "Blog", href: "/blog", prefixo: "/blog" },
   { nome: "Projects", href: "/projects", prefixo: "/projects" },
   { nome: "About", href: "/about", prefixo: "/about" },
 ];
 
-// Regra do wireframe: o item da rota atual não se linka — a home não
-// mostra "Blog" porque a home É o blog, e /about não mostra "About".
+// O blog é a própria home e o brand "RENAN" já volta pra ela, então
+// "Blog" não é item de nav. O item da rota atual também não se linka
+// (ex: /about não mostra "About").
 const visiveis = itens.filter((it) => !pathname.startsWith(it.prefixo));
-const menuAbertoPorRota = visiveis.length < itens.length;
-void menuAbertoPorRota;
-
-const hrefs = visiveis.map((it) => it.href).join("\n");
-void hrefs;
 ---
 
 <header class="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">

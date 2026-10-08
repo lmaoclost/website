@@ -1,16 +1,13 @@
 ---
 const itens = [
-  { nome: "Blog", href: "/blog", prefixo: "/blog" },
   { nome: "Projects", href: "/projects", prefixo: "/projects" },
   { nome: "About", href: "/about", prefixo: "/about" },
 ];
 
 const pathname = Astro.url.pathname;
 
-// No wireframe, a home não se linka (home É o blog) e cada página
-// oculta o item da própria rota. A home (/ e /index) não casa prefixo
-// nenhum, então todos os itens aparecem lá — exceto quando o prefixo
-// corresponder à rota atual.
+// O blog é a própria home (o brand RENAN já leva pra ela), então
+// "Blog" não é item de nav. O item da rota atual também é ocultado.
 const visiveis = itens.filter((it) => {
   if (it.prefixo === "/") return true;
   return pathname === "/" || !pathname.startsWith(it.prefixo);
