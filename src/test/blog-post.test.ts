@@ -123,3 +123,15 @@ describe("ajustes pós-review do Renan", () => {
     expect(page).toContain("scroll-margin-top: 5.5rem");
   });
 });
+
+describe("TOC vazio (#45 follow-up)", () => {
+  const read = (p: string) =>
+    readFileSync(resolve(__dirname, "..", p), "utf-8");
+
+  it("sidebar não renderiza quando o post não tem h2/h3", () => {
+    const toc = read("components/Toc.astro");
+    // render condicional no componente inteiro
+    expect(toc).toMatch(/visible|renderiz|visivel|visível/);
+    expect(toc).toMatch(/h2h3\.length > 0|headings\.length > 0/);
+  });
+});

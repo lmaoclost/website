@@ -9,30 +9,36 @@ interface Props {
 
 const { headings } = Astro.props;
 const h2h3 = headings.filter((h) => h.depth === 2 || h.depth === 3);
+
+// no headings (or only h4+): no sidebar — the layout column collapses back
+// to the centered measure alone (the flex sibling just goes away)
+const visivel = h2h3.length > 0;
 ---
 
-<aside
-  id="post-toc"
-  class="hidden lg:block sticky top-24 text-sm w-56 shrink-0"
-  aria-label="Nesta página"
->
-  <h2 class="font-semibold text-foreground mb-4">Nesta página</h2>
-  <ul class="space-y-1 border-l border-border">
-    {h2h3.map((h) => (
-      <li>
-        <a
-          href={`#${h.slug}`}
-          data-toc-link
-          data-depth={h.depth}
-          class="block py-1 text-muted-foreground hover:text-foreground border-l-2 border-transparent -ml-px pl-3 transition-colors"
-          class:list={[h.depth === 3 && "pl-6 text-xs"]}
-        >
-          {h.text}
-        </a>
-      </li>
-    ))}
-  </ul>
-</aside>
+{visivel && (
+  <aside
+    id="post-toc"
+    class="hidden lg:block sticky top-24 text-sm w-56 shrink-0"
+    aria-label="Nesta página"
+  >
+    <h2 class="font-semibold text-foreground mb-4">Nesta página</h2>
+    <ul class="space-y-1 border-l border-border">
+      {h2h3.map((h) => (
+        <li>
+          <a
+            href={`#${h.slug}`}
+            data-toc-link
+            data-depth={h.depth}
+            class="block py-1 text-muted-foreground hover:text-foreground border-l-2 border-transparent -ml-px pl-3 transition-colors"
+            class:list={[h.depth === 3 && "pl-6 text-xs"]}
+          >
+            {h.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </aside>
+)}
 
 <script>
   // Scroll-spy: highlights the visible heading (Akita pattern:
