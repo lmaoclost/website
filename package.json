@@ -10,6 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "new:post": "node scripts/new-post.mjs",
     "format": "prettier --write .",
     "test": "vitest"
   },

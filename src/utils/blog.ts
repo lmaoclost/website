@@ -1,4 +1,8 @@
 import { getCollection } from "astro:content";
+import { slugify } from "./slugify";
+
+// slugify re-exported for module consumers (CLI can't import astro:content)
+export { slugify };
 
 export interface PostListItem {
   title: string;
@@ -71,15 +75,6 @@ export function groupPostsByMonth<
     });
   }
   return [...grupos.values()];
-}
-
-export function slugify(title: string): string {
-  return title
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
 }
 
 /** Reading time estimate: 200 words per minute, minimum 1. */
