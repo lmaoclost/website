@@ -12,7 +12,10 @@
     "astro": "astro",
     "new:post": "node scripts/new-post.mjs",
     "format": "prettier --write .",
-    "test": "vitest"
+    "test": "vitest",
+    "validate:routes": "node scripts/validate-routes.mjs",
+    "validate:repeat": "node scripts/validate-repeatability.mjs",
+    "audit": "node scripts/audit.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^7.0.0",
@@ -41,6 +44,7 @@
   "devDependencies": {
     "prettier": "3.9.9",
     "prettier-plugin-astro": "1.1.0",
-    "vitest": "^5.0.3"
+    "vitest": "^5.0.3",
+    "yaml": "^2.9.1"
   }
 }

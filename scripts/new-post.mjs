@@ -1,10 +1,24 @@
 #!/usr/bin/env node
-// new:post CLI — creates a blog post skeleton with correct frontmatter.
+// new:post CLI — creates a blog post skeleton from templates/post.md.tmpl.
+// Template lives in a file (editable without touching code); the rendered
+// output is validated with a YAML round trip before writing.
 // Inspired by Chris Titus's new-post.mjs; reuses this site's slugify.
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+
+import { parse as parseYaml } from "yaml";
 
 import { slugify } from "../src/utils/slugify.ts";
+
+const RESERVED_ROUTES = new Set([
+  "about",
+  "projects",
+  "design",
+  "blog",
+  "tag",
+  "rss.xml",
+  "404",
+]);
 
 export function parseArguments(argv) {
   const [title, ...rest] = argv;
@@ -52,26 +66,36 @@ export function todayUtc(now = new Date()) {
   return now.toISOString().slice(0, 10);
 }
 
-// Optional fields (description/tldr) are OMITTED, not left empty: an empty
-// `description:` is YAML null and fails the collection schema. The HTML
-// comment below documents them for the writer instead.
-export function renderTemplate({ title, date, tags }) {
-  const tagsYaml = tags.length
-    ? `\ntags: [${tags.join(", ")}]`
-    : "\ntags: []";
-  return `---
-title: ${JSON.stringify(title)}
-pubDate: ${date}${tagsYaml}
-draft: true
----
+/** Route collision check: a post slug that would shadow a fixed page fails at generation (not at build). */
+function assertSlugAvailable(slug) {
+  if (RESERVED_ROUTES.has(slug)) {
+    throw new Error(
+      `slug "${slug}" collides with a reserved route — pick a different title`,
+    );
+  }
+}
 
-<!--
-Opcionais do schema (adicione quando quiser preencher):
-description: resumo curto do post (lista, RSS e meta description)
-tldr: resumo em uma frase, colapsável no topo do post
-tags: as tags viram links pra /tag/<slug>
--->
-`;
+/** Renders the template file with token replacement. */
+export function renderTemplate(template, { title, date, tags }, slug) {
+  const tagsYaml = tags.length ? `\ntags: [${tags.join(", ")}]` : "";
+  return template
+    .replaceAll("{{TITLE}}", () => JSON.stringify(title))
+    .replaceAll("{{DATE}}", date)
+    .replaceAll("{{SLUG}}", slug)
+    .replaceAll("{{TAGS}}", tagsYaml);
+}
+
+/** YAML round trip: the generated frontmatter must parse back to the exact input. */
+function validateRoundTrip(output, { title, date, tags }) {
+  const match = output.match(/^---\n([\s\S]*?)\n---/);
+  if (!match) throw new Error("generated template has no frontmatter block");
+  const parsed = parseYaml(match[1]);
+  if (parsed.title !== title) {
+    throw new Error("generated title failed exact YAML round trip");
+  }
+  if (parsed.pubDate !== date) {
+    throw new Error("generated pubDate failed exact YAML round trip");
+  }
 }
 
 export async function main(argv = process.argv.slice(2), root = process.cwd()) {
@@ -82,13 +106,28 @@ export async function main(argv = process.argv.slice(2), root = process.cwd()) {
   };
   const slug = slugify(data.title);
   if (!slug) throw new Error("title does not produce a usable slug");
+  assertSlugAvailable(slug);
+
+  // template always comes from the real repo (main root), not root arg:
+  // tests pass a tmp dir for the OUTPUT, the template stays versioned
+  const templatePath = join(import.meta.dirname, "../templates/post.md.tmpl");
+  if (!existsSync(templatePath)) {
+    throw new Error(`template not found: ${templatePath}`);
+  }
+  const template = readFileSync(templatePath, "utf8");
+
+  const output = renderTemplate(template, data, slug);
+  validateRoundTrip(output, data);
+
   const blogDir = join(root, "src/content/blog");
   const postPath = join(blogDir, `${slug}.md`);
   mkdirSync(blogDir, { recursive: true });
   if (existsSync(postPath)) {
     throw new Error(`post already exists: ${postPath}`);
   }
-  writeFileSync(postPath, renderTemplate(data));
+
+  mkdirSync(dirname(postPath), { recursive: true });
+  writeFileSync(postPath, output, { flag: "wx" });
   return { slug, postPath };
 }
 
