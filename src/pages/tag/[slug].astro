@@ -1,0 +1,73 @@
+---
+// Tag page: one route per distinct tag, reusing the list components.
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import PostItem from "../../components/PostItem.astro";
+import MonthNav from "../../components/MonthNav.astro";
+import { groupPostsByMonth, readingTime, slugify } from "../../utils/blog";
+import type { MonthGroup } from "../../utils/blog";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  const porTag = new Map<string, typeof posts>();
+  for (const post of posts) {
+    for (const tag of post.data.tags) {
+      const slug = slugify(tag);
+      if (!porTag.has(slug)) porTag.set(slug, []);
+      porTag.get(slug)!.push(post);
+    }
+  }
+  return [...porTag.entries()].map(([slug, postsDaTag]) => ({
+    params: { slug },
+    props: { posts: postsDaTag },
+  }));
+}
+
+const { posts } = Astro.props;
+// posts da prop: entries da collection; o contrato com PostItem exige
+// título/dia/publicDate/tags/href/minutos — monto com os mesmos utils da lista
+const itens = posts
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .map((p) => ({
+    title: p.data.title,
+    day: String(p.data.pubDate.getUTCDate()).padStart(2, "0"),
+    pubDate: p.data.pubDate,
+    tags: p.data.tags,
+    href: `/blog/${slugify(p.data.title)}`,
+    minutos: readingTime(p.body ?? ""),
+  }));
+const meses: MonthGroup[] = groupPostsByMonth(itens);
+const mesesDaTag = meses.map((m) => ({
+  ...m,
+  posts: m.posts.filter((i) => itens.some((it) => it.href === i.href)),
+}));
+---
+
+<Layout title={`#${posts[0]?.data.tags[0] ?? "Tag"}`}>
+  <div class="mx-auto max-w-6xl px-4 py-10 flex gap-16 items-start">
+    <main class="flex-1 min-w-0">
+      <header class="mb-8">
+        <h1 class="text-2xl font-bold">
+          {posts[0]?.data.tags.find((t) => slugify(t) === Astro.params.slug)}
+        </h1>
+        <p class="font-mono text-xs text-muted-foreground mt-2">
+          {`${posts.length} ${posts.length === 1 ? "post" : "posts"}`}
+        </p>
+      </header>
+      {meses.map((m) => (
+        <section class="mt-8">
+          <h2
+            id={m.id}
+            class="text-2xl font-bold pt-4 pb-2 border-b border-border scroll-mt-24"
+          >
+            {m.label}
+          </h2>
+          {m.posts.map((post) => (
+            <PostItem post={post} />
+          ))}
+        </section>
+      ))}
+    </main>
+    <MonthNav meses={meses} />
+  </div>
+</Layout>

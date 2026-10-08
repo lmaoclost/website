@@ -2,6 +2,8 @@
 // One list item (rule from #11: one-line quick read).
 // The CTA link wraps day + title only; meta and tags live outside it.
 // Day cell uses the fixed 56px column on both rows via grid.
+// Tags link to their tag page (issue #36).
+import { slugify } from "../utils/blog";
 import type { MonthGroup } from "../utils/blog";
 
 interface Props {
@@ -30,7 +32,9 @@ const datetime = post.pubDate.toISOString();
     <p class="font-mono text-xs text-muted-foreground flex flex-wrap items-center gap-x-2.5">
       <span>{post.minutos} min</span>
       {post.tags.map((t) => (
-        <span>{"#" + t}</span>
+        <a href={`/tag/${slugify(t)}`} class="hover:text-foreground">
+          {"#" + t}
+        </a>
       ))}
     </p>
   </div>

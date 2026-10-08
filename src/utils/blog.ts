@@ -83,9 +83,9 @@ export function slugify(title: string): string {
 }
 
 /** Reading time estimate: 200 words per minute, minimum 1. */
-export function readingTime(texto: string): number {
-  const palavras = texto.trim().split(/\s+/).filter(Boolean).length;
-  return Math.max(1, Math.ceil(palavras / 200));
+export function readingTime(text: string): number {
+  const words = text.trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil(words / 200));
 }
 
 export async function getPosts() {
