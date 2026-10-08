@@ -16,7 +16,8 @@
     "validate:routes": "node scripts/validate-routes.mjs",
     "validate:repeat": "node scripts/validate-repeatability.mjs",
     "audit": "node scripts/audit.mjs",
-    "test:lighthouse": "lhci autorun --config=lighthouserc.json"
+    "test:lighthouse": "lhci autorun --config=lighthouserc.json",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@astrojs/react": "^7.0.0",

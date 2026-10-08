@@ -1,0 +1,8 @@
+{
+  "advisories": {
+    "GHSA-VFJ7-8CJW-P6XM": {
+      "reason": "braces ReDoS via fast-glob: only reachable through shadcn CLI (dev-time tool, never shipped to the static site). Fix requires shadcn@1.0.0 downgrade (breaking).",
+      "expires": "2027-01-31"
+    }
+  }
+}
