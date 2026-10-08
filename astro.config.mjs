@@ -1,7 +1,6 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 
-import react from "@astrojs/react";
 import mdx from "@astrojs/mdx";
 import tailwindcss from "@tailwindcss/vite";
 
@@ -10,7 +9,7 @@ export default defineConfig({
   // placeholder: trocar pelo domínio real quando existir
   // (RSS/links absolutos derivam daqui)
   site: "https://lmaoclost.dev",
-  integrations: [react(), mdx()],
+  integrations: [mdx()],
   vite: {
     plugins: [tailwindcss()],
   },

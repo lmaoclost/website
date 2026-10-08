@@ -13,11 +13,9 @@ describe("issue #21: shadcn/ui init", () => {
     expect(cfg.tailwind.css).toContain("global.css");
   });
 
-  it("util cn existe em src/lib/utils", () => {
-    const path = resolve(root, "src/lib/utils.ts");
-    expect(existsSync(path)).toBe(true);
-    const src = readFileSync(path, "utf-8");
-    expect(src).toContain("clsx");
-    expect(src).toContain("twMerge");
+  it("remoção da #45: util cn e componentes stub saem; tokens e components.json ficam", () => {
+    expect(existsSync(resolve(root, "src/lib/utils.ts"))).toBe(false);
+    expect(existsSync(resolve(root, "src/components/ui"))).toBe(false);
+    expect(existsSync(resolve(root, "components.json"))).toBe(true);
   });
 });
