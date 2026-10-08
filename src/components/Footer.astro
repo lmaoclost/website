@@ -1,0 +1,36 @@
+---
+// Footer fixo em todas as páginas (integrado no Layout).
+// RSS e About apontam pra rotas que ainda não existem (#23,
+// e o feed RSS em issue futura): são placeholders conscientes.
+---
+
+<footer class="border-t border-border text-xs text-muted-foreground">
+  <div class="mx-auto max-w-6xl flex flex-wrap items-center justify-between gap-3 px-4 pt-[18px] pb-8">
+    <a
+      href="/"
+      class="text-sm font-bold tracking-[0.14em] text-foreground select-none hover:text-foreground"
+    >
+      RENAN
+    </a>
+    <nav aria-label="Links do rodapé" class="flex items-center gap-5">
+      <a href="/rss.xml" class="hover:text-foreground">
+        RSS
+      </a>
+      <a
+        href="https://github.com/lmaoclost"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hover:text-foreground"
+      >
+        GitHub
+      </a>
+      <a href="/about" class="hover:text-foreground">
+        About
+      </a>
+      <span aria-hidden="true">·</span>
+      <a href="/design" class="hover:text-foreground">
+        Design
+      </a>
+    </nav>
+  </div>
+</footer>

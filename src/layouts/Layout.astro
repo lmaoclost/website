@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import ThemeScript from "../components/ThemeScript.astro";
 import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
 
 interface Props {
   title: string;
@@ -30,8 +31,11 @@ const { title, preloadSerif = false } = Astro.props;
     <title>{title}</title>
     <ThemeScript />
   </head>
-  <body class="bg-background text-foreground font-sans min-h-screen">
+  <body class="bg-background text-foreground font-sans min-h-screen flex flex-col">
     <Navbar />
-    <slot />
+    <div class="flex-1">
+      <slot />
+    </div>
+    <Footer />
   </body>
 </html>

@@ -62,8 +62,11 @@ describe("issue #30: página /design", () => {
     expect(navbar).toContain('aria-label="Alternar tema"');
   });
 
-  it("linkado a partir da home", () => {
-    const index = readFileSync(resolve(root, "src/pages/index.astro"), "utf-8");
-    expect(index).toContain('href="/design"');
+  it("linkado a partir do footer (a home virou o blog na #22)", () => {
+    const footer = readFileSync(
+      resolve(root, "src/components/Footer.astro"),
+      "utf-8",
+    );
+    expect(footer).toContain('href="/design"');
   });
 });
