@@ -1,0 +1,37 @@
+---
+// Um item da lista de posts (regra da #11: leitura rápida numa linha).
+// O link (CTA) envolve só dia + título; meta e tags ficam fora do link.
+// O dia ocupa a coluna fixa de 56px em ambas as linhas via grid.
+import type { MonthGroup } from "../utils/blog";
+
+interface Props {
+  post: MonthGroup["posts"][number];
+}
+
+const { post } = Astro.props;
+const datetime = post.pubDate.toISOString();
+---
+
+<article class="py-3.5 border-t border-border">
+  <a
+    href={post.href}
+    aria-label={`Ler: ${post.title} · ${datetime}`}
+    class="grid grid-cols-[56px_minmax(0,1fr)] gap-x-4 group items-baseline"
+  >
+    <span class="font-mono text-sm text-muted-foreground" title={datetime}>
+      {post.day}
+    </span>
+    <h3 class="text-xl font-semibold leading-snug text-foreground group-hover:text-primary transition-colors">
+      {post.title}
+    </h3>
+  </a>
+  <div class="grid grid-cols-[56px_minmax(0,1fr)] gap-x-4 mt-1 items-baseline">
+    <span></span>
+    <p class="font-mono text-xs text-muted-foreground flex flex-wrap items-center gap-x-2.5">
+      <span>{post.minutos} min</span>
+      {post.tags.map((t) => (
+        <span>{"#" + t}</span>
+      ))}
+    </p>
+  </div>
+</article>

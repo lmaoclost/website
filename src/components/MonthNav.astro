@@ -1,0 +1,30 @@
+---
+// Navegação lateral de meses (sticky, padrão do wireframe + Akita).
+// Só lista meses que têm posts reais.
+import type { MonthGroup } from "../utils/blog";
+
+interface Props {
+  meses: MonthGroup[];
+}
+
+const { meses } = Astro.props;
+---
+
+<aside class="hidden lg:block sticky top-24 text-sm" aria-label="Nesta página">
+  <h2 class="font-semibold text-foreground mb-4">Nesta página</h2>
+  <ul class="space-y-1">
+    {meses.map((m, i) => (
+      <li>
+        <a
+          href={`#${m.id}`}
+          class:list={[
+            "block py-1.5 text-muted-foreground hover:text-foreground",
+            i === 0 && "text-foreground font-semibold",
+          ]}
+        >
+          {m.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</aside>
