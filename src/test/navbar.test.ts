@@ -29,8 +29,6 @@ describe("issue #25: Navbar", () => {
     expect(navbar).not.toContain('"/blog"');
     expect(navbar).toContain("it.href");
     expect(navbar).toContain("it.nome");
-    // lógica de ocultar item atual: compara pathname
-    expect(navbar).toContain("Astro.url.pathname");
   });
 
   it("direita: placeholder de busca com aria + toggle de tema", () => {

@@ -1,17 +1,12 @@
 ---
 import MobileMenu from "./MobileMenu.astro";
 
-const pathname = Astro.url.pathname;
-
+// Nav fixa em todas as páginas (padrão do Akita): os dois itens
+// aparecem sempre, sem ocultar a rota atual.
 const itens = [
-  { nome: "Projects", href: "/projects", prefixo: "/projects" },
-  { nome: "About", href: "/about", prefixo: "/about" },
+  { nome: "Projects", href: "/projects" },
+  { nome: "About", href: "/about" },
 ];
-
-// O blog é a própria home e o brand "RENAN" já volta pra ela, então
-// "Blog" não é item de nav. O item da rota atual também não se linka
-// (ex: /about não mostra "About").
-const visiveis = itens.filter((it) => !pathname.startsWith(it.prefixo));
 ---
 
 <header class="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
@@ -27,7 +22,7 @@ const visiveis = itens.filter((it) => !pathname.startsWith(it.prefixo));
         RENAN
       </a>
       <div class="hidden md:flex items-center gap-6">
-        {visiveis.map((it) => (
+        {itens.map((it) => (
           <a
             href={it.href}
             class="text-sm text-muted-foreground hover:text-foreground"
@@ -71,4 +66,4 @@ const visiveis = itens.filter((it) => !pathname.startsWith(it.prefixo));
   </nav>
 </header>
 
-<MobileMenu client:load itens={visiveis} />
+<MobileMenu client:load itens={itens} />

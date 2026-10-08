@@ -1,17 +1,9 @@
 ---
+// Nav fixa em todas as páginas (mesma regra da Navbar).
 const itens = [
-  { nome: "Projects", href: "/projects", prefixo: "/projects" },
-  { nome: "About", href: "/about", prefixo: "/about" },
+  { nome: "Projects", href: "/projects" },
+  { nome: "About", href: "/about" },
 ];
-
-const pathname = Astro.url.pathname;
-
-// O blog é a própria home (o brand RENAN já leva pra ela), então
-// "Blog" não é item de nav. O item da rota atual também é ocultado.
-const visiveis = itens.filter((it) => {
-  if (it.prefixo === "/") return true;
-  return pathname === "/" || !pathname.startsWith(it.prefixo);
-});
 ---
 
 <div class="lg:hidden" id="mobile-menu" hidden>
@@ -20,7 +12,7 @@ const visiveis = itens.filter((it) => {
     class="border-b border-border bg-background/95 backdrop-blur-sm"
   >
     <div class="mx-auto max-w-6xl px-4 py-3 flex flex-col gap-1">
-      {visiveis.map((it) => (
+      {itens.map((it) => (
         <a
           href={it.href}
           class="rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground"
