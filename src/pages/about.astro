@@ -1,0 +1,252 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Toc from "../components/Toc.astro";
+import GithubIcon from "../components/icons/GithubIcon.astro";
+import LinkedinIcon from "../components/icons/LinkedinIcon.astro";
+import { profile } from "../data/profile";
+
+const { contato } = profile;
+const iniciais = profile.nome
+  .split(/\s+/)
+  .map((p) => p[0])
+  .join("")
+  .slice(0, 3)
+  .toUpperCase();
+
+// TOC: as seções da página (mesma assinatura do Toc do post)
+import type { MarkdownHeading } from "astro";
+const headings: MarkdownHeading[] = [
+  { depth: 2, slug: "sobre-mim", text: "Sobre mim" },
+  { depth: 2, slug: "experiencia", text: "Experiência" },
+  { depth: 2, slug: "projetos", text: "Projetos" },
+  { depth: 2, slug: "fora-do-codigo", text: "Fora do código" },
+  { depth: 2, slug: "contato", text: "Contato" },
+];
+---
+
+<Layout title="Sobre" preloadSerif>
+  <div class="mx-auto max-w-6xl px-4 flex gap-12 items-start lg:gap-16">
+    <main class="flex-1 min-w-0 pt-10 pb-16">
+      <div class="mx-auto" style="max-width: 65ch;">
+        <!-- intro: centralizada (foto em cima, nome, role, ícones abaixo) -->
+        <header class="pb-11 text-center">
+          <span
+            class="inline-flex w-[120px] h-[120px] rounded-full bg-card border border-border items-center justify-center text-xs tracking-[0.16em] text-muted-foreground select-none"
+            aria-label="Foto de {profile.nome}"
+          >
+            {iniciais}
+          </span>
+          <h1 class="text-3xl font-bold tracking-[0.04em] leading-tight mt-4">
+            {profile.nome}
+          </h1>
+          <p class="text-[13px] text-muted-foreground mt-1">{profile.role}</p>
+          <p class="flex items-center justify-center gap-4 text-sm mt-3">
+            <a
+              href={contato.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-muted-foreground hover:text-foreground"
+              aria-label="GitHub"
+            >
+              <GithubIcon />
+            </a>
+            <a
+              href={contato.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-muted-foreground hover:text-foreground"
+              aria-label="LinkedIn"
+            >
+              <LinkedinIcon />
+            </a>
+            {contato.email && (
+              <a
+                href={`mailto:${contato.email}`}
+                class="text-muted-foreground hover:text-foreground"
+                aria-label="Email"
+              >
+                {iniciais === "R" ? "@" : "@"}
+              </a>
+            )}
+            {contato.cv && (
+              <a
+                href={contato.cv}
+                download
+                class="text-muted-foreground hover:text-foreground"
+              >
+                CV
+              </a>
+            )}
+          </p>
+          <p class="text-lg leading-[1.55] mt-5 text-left">{profile.intro}</p>
+        </header>
+
+        <main>
+          <!-- seções: títulos full-width como o post do blog; conteúdo na medida -->
+          <section
+            id="sobre-mim"
+            style="scroll-margin-top: 5.5rem;"
+            class="border-t border-border pt-8 mt-2"
+          >
+            <h2 class="text-2xl font-bold">Sobre mim</h2>
+            <div class="mt-5">
+              {profile.bio.map((paragrafo, i) => (
+                <p
+                  class:list={[
+                    "text-lg leading-[1.55]",
+                    i < profile.bio.length - 1 && "mb-4",
+                  ]}
+                >
+                  {paragrafo}
+                </p>
+              ))}
+            </div>
+          </section>
+
+          <section
+            id="experiencia"
+            style="scroll-margin-top: 5.5rem;"
+            class="border-t border-border pt-8 mt-10"
+          >
+            <h2 class="text-2xl font-bold">Experiência</h2>
+            <div class="mt-5">
+              {profile.experiencia.map((job, i) => (
+                <div
+                  class:list={[
+                    "grid grid-cols-[64px_minmax(0,1fr)] gap-x-4 py-3.5",
+                    i > 0 && "border-t border-border",
+                  ]}
+                >
+                  <span class="font-mono font-semibold text-xl leading-[1.3] text-foreground">
+                    {job.ano}
+                  </span>
+                  <div>
+                    <p class="flex flex-wrap items-baseline justify-between gap-x-4 font-semibold text-base leading-[1.4]">
+                      <span>{job.empresa}</span>
+                      <span class="font-normal text-[13px] text-muted-foreground">
+                        {job.cargo}
+                      </span>
+                    </p>
+                    <p class="mt-1 text-[15px] leading-[1.55] text-muted-foreground">
+                      {job.resumo}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section
+            id="projetos"
+            style="scroll-margin-top: 5.5rem;"
+            class="border-t border-border pt-8 mt-10"
+          >
+            <h2 class="text-2xl font-bold">Projetos</h2>
+            <div class="mt-5">
+              {profile.projetos.map((pr, i) => (
+                <div
+                  class:list={[
+                    "grid grid-cols-[minmax(0,1fr)_auto] gap-x-5 gap-y-0.5 py-[13px]",
+                    i > 0 && "border-t border-border",
+                  ]}
+                >
+                  <b class="font-mono font-semibold text-[15px] text-foreground col-start-1">
+                    {pr.nome}
+                  </b>
+                  <a
+                    href={pr.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="row-span-3 col-start-2 self-center font-mono text-[13px] text-muted-foreground underline underline-offset-[3px] hover:text-foreground"
+                  >
+                    GitHub →
+                  </a>
+                  <p class="text-[15px] text-muted-foreground col-start-1">
+                    {pr.descricao}
+                  </p>
+                  <p class="font-mono text-xs text-muted-foreground col-start-1">
+                    {pr.stack.join(" · ")}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section
+            id="fora-do-codigo"
+            style="scroll-margin-top: 5.5rem;"
+            class="border-t border-border pt-8 mt-10"
+          >
+            <h2 class="text-2xl font-bold">Fora do código</h2>
+            <div class="grid gap-7 mt-5 md:grid-cols-3">
+              {profile.hobbies.map((h) => (
+                <div>
+                  <h3 class="font-mono uppercase text-[11px] font-semibold text-muted-foreground tracking-[0.18em] mb-2 pb-2 border-b border-border">
+                    {h.nome}
+                  </h3>
+                  <p class="text-[15px] leading-[1.6] text-muted-foreground">
+                    {h.texto}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section
+            id="contato"
+            style="scroll-margin-top: 5.5rem;"
+            class="border-t border-border pt-8 mt-10"
+          >
+            <h2 class="text-2xl font-bold">Contato</h2>
+            <div class="mt-5">
+              <p class="text-lg mb-3">
+                Quer conversar sobre algum projeto, trabalho ou simplesmente
+                trocar uma ideia?
+              </p>
+              <p class="flex flex-wrap gap-x-6 gap-y-2 font-mono text-sm">
+                <a
+                  href={contato.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-foreground underline underline-offset-[3px] hover:no-underline"
+                >
+                  GitHub
+                </a>
+                <a
+                  href={contato.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-foreground underline underline-offset-[3px] hover:no-underline"
+                >
+                  LinkedIn
+                </a>
+                {contato.email && (
+                  <a
+                    href={`mailto:${contato.email}`}
+                    class="text-foreground underline underline-offset-[3px] hover:no-underline"
+                  >
+                    Email
+                  </a>
+                )}
+                {contato.cv && (
+                  <a
+                    href={contato.cv}
+                    download
+                    class="text-foreground underline underline-offset-[3px] hover:no-underline"
+                  >
+                    Download CV
+                  </a>
+                )}
+              </p>
+            </div>
+          </section>
+        </main>
+      </div>
+    </main>
+    <Toc headings={headings} />
+  </div>
+</Layout>
+
+<style>
+  /* label caps com scroll-margin herdando o mesmo comportamento das âncoras de seção */
+</style>
