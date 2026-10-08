@@ -19,6 +19,12 @@ const { title, preloadSerif = false } = Astro.props;
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="RENAN"
+      href="/rss.xml"
+    />
     {preloadSerif && (
       <link
         rel="preload"
