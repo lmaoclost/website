@@ -1,0 +1,76 @@
+---
+// Mock de screenshot de projeto (placeholder elegante, sem imagem binária).
+// Três tipos desenhados com CSS puro: janela de browser / editor de código / lista.
+interface Props {
+  tipo?: "editor" | "browser" | "table";
+  label?: string;
+}
+
+const { tipo = "browser", label = "SCREENSHOT" } = Astro.props;
+---
+
+<div
+  aria-hidden="true"
+  class="mock relative overflow-hidden rounded-[3px] border border-border bg-card h-[250px]"
+>
+  <!-- barra de título da janela com 3 bolinhas -->
+  <div class="absolute inset-x-0 top-0 h-[22px] border-b border-border bg-muted flex items-center gap-2 px-2.5">
+    <i class="w-[6px] h-[6px] rounded-full bg-border inline-block"></i>
+    <i class="w-[6px] h-[6px] rounded-full bg-border inline-block"></i>
+    <i class="w-[6px] h-[6px] rounded-full bg-border inline-block"></i>
+  </div>
+
+  {tipo === "editor" && (
+    <div class="absolute inset-x-0 bottom-0 top-[22px] grid grid-cols-[110px_1fr]">
+      <div class="border-r border-border bg-muted/50 p-3 space-y-2">
+        <div class="h-2 rounded-sm bg-border w-[70px]" />
+        <div class="h-2 rounded-sm bg-border w-[56px]" />
+        <div class="h-2 rounded-sm bg-border w-[64px]" />
+      </div>
+      <div class="p-3 pt-6 space-y-2">
+        <div class="h-2 rounded-sm bg-border w-[150px]" />
+        <div class="h-2 rounded-sm bg-border w-[220px]" />
+        <div class="h-2 rounded-sm bg-border w-[190px]" />
+        <div class="flex gap-2 pt-3">
+          <div class="h-[60px] w-[100px] rounded-sm border border-border bg-muted" />
+          <div class="h-[60px] w-[100px] rounded-sm border border-border bg-muted" />
+        </div>
+      </div>
+    </div>
+  )}
+
+  {tipo === "browser" && (
+    <div class="absolute inset-x-0 bottom-0 top-[22px] p-4 pt-5 space-y-3">
+      <div class="h-2 rounded-sm bg-border w-[90px]" />
+      <div class="h-3 rounded-sm bg-border w-[230px]" />
+      <div class="h-2 rounded-sm bg-border w-[150px]" />
+      <div class="pt-3 space-y-2.5">
+        <div class="h-2 rounded-sm bg-border w-full" />
+        <div class="h-2 rounded-sm bg-border w-[92%]" />
+        <div class="h-2 rounded-sm bg-border w-[96%]" />
+        <div class="h-2 rounded-sm bg-border w-[80%]" />
+        <div class="h-2 rounded-sm bg-border w-[95%]" />
+      </div>
+    </div>
+  )}
+
+  {tipo === "table" && (
+    <div class="absolute inset-x-0 bottom-0 top-[22px] p-4 pt-5">
+      <div class="flex justify-between items-center">
+        <div class="h-2 rounded-sm bg-border w-[120px]" />
+        <div class="h-[18px] w-[70px] rounded-sm border border-border bg-muted" />
+      </div>
+      <div class="mt-4 space-y-2">
+        {[0, 1, 2, 3].map(() => (
+          <div class="h-[26px] rounded-sm border border-border bg-muted flex items-center px-2.5">
+            <div class="h-2 rounded-sm bg-border w-[100px]" />
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+
+  <span class="absolute right-2.5 bottom-2 font-mono text-[10.5px] tracking-[0.14em] text-muted-foreground">
+    {label}
+  </span>
+</div>
