@@ -5,7 +5,7 @@ import { resolve } from "node:path";
 const root = resolve(__dirname, "../..");
 
 describe("issue #21: fonte serif self-hosted (#19)", () => {
-  it("woff2 da Source Serif 4 existe em public/fonts (latin + latin-ext)", () => {
+  it("Source Serif 4 woff2 files exist in public/fonts (latin + latin-ext)", () => {
     const dir = resolve(root, "public/fonts");
     expect(existsSync(dir)).toBe(true);
     const files = readdirSync(dir).filter((f) => f.endsWith(".woff2"));
@@ -17,14 +17,14 @@ describe("issue #21: fonte serif self-hosted (#19)", () => {
     }
   });
 
-  it("@font-face declarado no global.css com font-display swap", () => {
+  it("@font-face declared in global.css with font-display swap", () => {
     const css = readFileSync(resolve(root, "src/styles/global.css"), "utf-8");
     expect(css).toContain("@font-face");
     expect(css).toContain("font-display: swap");
     expect(css).toContain("/fonts/source-serif-4-latin.woff2");
   });
 
-  it("Layout precarrega o woff2 da fonte do corpo", () => {
+  it("Layout preloads the body font woff2", () => {
     const page = readFileSync(
       resolve(root, "src/layouts/Layout.astro"),
       "utf-8",

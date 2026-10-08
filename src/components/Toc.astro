@@ -1,6 +1,6 @@
 ---
-// Navegador por títulos (H2/H3) do post, sticky à direita.
-// Links âncora gerados do corpo; ativo destacado por scroll-spy (IntersectionObserver).
+// Sticky right-side TOC (H2/H3 of the post).
+// Anchor links from the body; active item tracked by scroll-spy (listener).
 import type { MarkdownHeading } from "astro";
 
 interface Props {
@@ -35,8 +35,8 @@ const h2h3 = headings.filter((h) => h.depth === 2 || h.depth === 3);
 </aside>
 
 <script>
-  // Scroll-spy: realça o link do título visível (padrão do Akita:
-  // navegação que acompanha o olho do usuário).
+  // Scroll-spy: highlights the visible heading (Akita pattern:
+  // navigation that follows the reader's eye).
   const links = document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]");
   if (links.length > 0) {
     const porId = new Map<string, HTMLAnchorElement>();

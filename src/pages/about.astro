@@ -13,7 +13,7 @@ const iniciais = profile.nome
   .slice(0, 3)
   .toUpperCase();
 
-// TOC: as seções da página (mesma assinatura do Toc do post)
+// TOC: page sections (same shape as the post Toc)
 import type { MarkdownHeading } from "astro";
 const headings: MarkdownHeading[] = [
   { depth: 2, slug: "sobre-mim", text: "Sobre mim" },
@@ -28,7 +28,7 @@ const headings: MarkdownHeading[] = [
   <div class="mx-auto max-w-6xl px-4 flex gap-12 items-start lg:gap-16">
     <main class="flex-1 min-w-0 pt-10 pb-16">
       <div class="mx-auto" style="max-width: 65ch;">
-        <!-- intro: centralizada (foto em cima, nome, role, ícones abaixo) -->
+        <!-- intro: centered (photo on top, name, role, icons below) -->
         <header class="pb-11 text-center">
           <span
             class="inline-flex w-[120px] h-[120px] rounded-full bg-card border border-border items-center justify-center text-xs tracking-[0.16em] text-muted-foreground select-none"
@@ -82,7 +82,7 @@ const headings: MarkdownHeading[] = [
         </header>
 
         <main>
-          <!-- seções: títulos full-width como o post do blog; conteúdo na medida -->
+          <!-- sections: full-width titles like the blog post; content inside the measure -->
           <section
             id="sobre-mim"
             style="scroll-margin-top: 5.5rem;"
@@ -248,5 +248,5 @@ const headings: MarkdownHeading[] = [
 </Layout>
 
 <style>
-  /* label caps com scroll-margin herdando o mesmo comportamento das âncoras de seção */
+  /* caps labels inherit scroll-margin behavior from section anchors */
 </style>

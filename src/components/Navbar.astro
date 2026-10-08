@@ -6,8 +6,8 @@ import SunIcon from "./icons/SunIcon.astro";
 import MoonIcon from "./icons/MoonIcon.astro";
 import SearchIcon from "./icons/SearchIcon.astro";
 
-// Nav fixa em todas as páginas (padrão do Akita): os dois itens
-// aparecem sempre, sem ocultar a rota atual.
+// Fixed nav on every page (like Akita): both items
+// always visible, current route never hidden.
 const itens = [
   { nome: "Projects", href: "/projects" },
   { nome: "About", href: "/about" },
@@ -140,10 +140,10 @@ const itens = [
 
 <script is:inline>
   (function () {
-    // Busca estilo Akita: submit abre o Google com site:<hostname>.
-    // Dominio dinamico (window.location.hostname): funciona em
-    // localhost, preview e no dominio de producao sem configuracao.
-    function montarUrlBusca(form) {
+    // Akita-style search: submit opens Google with site:<hostname>.
+    // Dynamic domain (window.location.hostname): works on
+    // localhost, preview and production with no config.
+    function buildSearchUrl(form) {
       var termo = form.q.value.trim();
       if (!termo) return null;
       var dominio = window.location.hostname;
@@ -154,7 +154,7 @@ const itens = [
     var form = document.getElementById("navbar-search-form");
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      var url = montarUrlBusca(form);
+      var url = buildSearchUrl(form);
       if (url) window.open(url, "_blank", "noopener");
     });
 
@@ -163,14 +163,14 @@ const itens = [
       .querySelector("form");
     formMobile.addEventListener("submit", function (e) {
       e.preventDefault();
-      var url = montarUrlBusca(formMobile);
+      var url = buildSearchUrl(formMobile);
       if (url) window.open(url, "_blank", "noopener");
     });
 
     var input = form.querySelector("input");
     var inputMobile = formMobile.querySelector("input");
 
-    // Atalho global: ⌘K / Ctrl+K foca o campo da navbar.
+    // Global shortcut: Cmd/Ctrl+K focuses the navbar search input.
     document.addEventListener("keydown", function (e) {
       if ((e.metaKey || e.ctrlKey) && (e.key === "k" || e.key === "K")) {
         e.preventDefault();
@@ -183,7 +183,7 @@ const itens = [
       }
     });
 
-    // Mobile: botao de lupa revela a barra de busca.
+    // Mobile: magnifier button reveals the search bar.
     var searchBtn = document.getElementById("mobile-search-btn");
     if (searchBtn) {
       searchBtn.addEventListener("click", function () {

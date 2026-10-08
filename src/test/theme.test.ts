@@ -4,8 +4,8 @@ import { resolve } from "node:path";
 
 const root = resolve(__dirname, "../..");
 
-describe("issue #21: resolução de tema + anti-FOUC", () => {
-  it("ThemeScript tem o script inline de tema (anti-FOUC)", () => {
+describe("issue #21: theme resolution + anti-FOUC", () => {
+  it("ThemeScript has the inline theme script (anti-FOUC)", () => {
     const page = readFileSync(
       resolve(root, "src/components/ThemeScript.astro"),
       "utf-8",
@@ -16,7 +16,7 @@ describe("issue #21: resolução de tema + anti-FOUC", () => {
     expect(page).toContain("prefers-color-scheme");
   });
 
-  it("script aplica classe dark no documentElement", () => {
+  it("script applies dark class to documentElement", () => {
     const page = readFileSync(
       resolve(root, "src/components/ThemeScript.astro"),
       "utf-8",
@@ -24,7 +24,7 @@ describe("issue #21: resolução de tema + anti-FOUC", () => {
     expect(page).toMatch(/classList\.(add|toggle)\(['"]dark['"]/);
   });
 
-  it("importa global.css via Layout", () => {
+  it("global.css imported via Layout", () => {
     const page = readFileSync(
       resolve(root, "src/layouts/Layout.astro"),
       "utf-8",

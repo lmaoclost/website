@@ -35,9 +35,9 @@ describe("issue #25: Layout componentizado", () => {
     ]) {
       const src = read(page);
       expect(src, page).toContain("Layout");
-      // head não pode ficar duplicado na página (charset fica só no Layout)
+      // head must not be duplicated in the page (charset lives only in Layout)
       expect(src.match(/charset=/g)?.length ?? 0, page).toBeLessThanOrEqual(0);
-      // script anti-FOUC não pode ficar duplicado inline na página
+      // anti-FOUC script must not be duplicated inline in the page
       expect(
         src.match(/prefers-color-scheme/g)?.length ?? 0,
         page,

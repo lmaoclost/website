@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-const cores = [
+const colorTokens = [
   {
     token: "--background",
     papel: "Fundo do site (o papel)",
@@ -49,7 +49,7 @@ const cores = [
   },
 ];
 
-const ritmo = [
+const rhythmTokens = [
   { token: "space-1", valor: "4px", uso: "detalhes micro (ícone-texto)" },
   { token: "space-2", valor: "8px", uso: "dentro de componentes" },
   { token: "space-3", valor: "12px", uso: "entre elementos relacionados" },
@@ -80,7 +80,7 @@ const ritmo = [
         no par de texto (valor light / valor dark), piso AA 4.5:1.
       </p>
       <div class="space-y-2" id="swatches">
-        {cores.map((c) => (
+        {colorTokens.map((c) => (
           <div class="border border-border rounded p-3 flex flex-wrap gap-4 items-center">
             <span
               class="inline-block w-10 h-10 rounded border border-border shrink-0"
@@ -146,7 +146,7 @@ const ritmo = [
           </a>
           ,<em>itálico</em> e <strong>negrito</strong> no meio da prosa.
         </p>
-        <pre class="font-mono text-sm bg-muted rounded p-4 overflow-x-auto"><code>{`const theme = stored ?? sistema ?? "paper";`}</code></pre>
+        <pre class="font-mono text-sm bg-muted rounded p-4 overflow-x-auto"><code>{`const theme = stored ?? system ?? "paper";`}</code></pre>
       </article>
     </section>
 
@@ -157,7 +157,7 @@ const ritmo = [
         equivale ao valor real.
       </p>
       <div class="space-y-2">
-        {ritmo.map((r) => (
+        {rhythmTokens.map((r) => (
           <div class="flex items-center gap-4">
             <span
               class="inline-block h-4 rounded bg-primary/25 border border-border shrink-0"

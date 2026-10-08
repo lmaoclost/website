@@ -6,7 +6,7 @@ const root = resolve(__dirname, "../..");
 const read = (p: string) => readFileSync(resolve(root, p), "utf-8");
 
 describe("issue #24: página do post", () => {
-  it("src/pages/blog/[slug].astro existe com getStaticPaths sobre getPosts", () => {
+  it("src/pages/blog/[slug].astro exists with getStaticPaths over getPosts", () => {
     const path = resolve(root, "src/pages/blog/[slug].astro");
     expect(existsSync(path)).toBe(true);
     const page = read("src/pages/blog/[slug].astro");
@@ -14,28 +14,28 @@ describe("issue #24: página do post", () => {
     expect(page).toContain("getPosts");
   });
 
-  it("contrato: slug da rota é slugify(title) — o mesmo que a lista gera", () => {
+  it("contract: route slug is slugify(title) — same as list generates", () => {
     const page = read("src/pages/blog/[slug].astro");
     expect(page).toContain("slugify");
     expect(page).toContain("astro:content");
   });
 
-  it("header do post: título h1, meta com data legível + minutos + tags texto", () => {
+  it("post header: h1 title, meta with readable date + minutes + plain tags", () => {
     const page = read("src/pages/blog/[slug].astro");
     expect(page).toMatch(/<h1/);
-    expect(page).toContain("minutosDeLeitura");
+    expect(page).toContain("readingTime");
     expect(page).toContain("toLocaleDateString");
     expect(page).toContain("tags.map");
   });
 
-  it("corpo: serif 18px, line-height 1.5, measure 65ch centrada", () => {
+  it("body: serif 18px, line-height 1.5, centered 65ch measure", () => {
     const page = read("src/pages/blog/[slug].astro");
     expect(page).toContain("font-serif");
     expect(page).toContain("65ch");
     expect(page).toContain("line-height: 1.5");
   });
 
-  it("Layout com preloadSerif e título do post", () => {
+  it("Layout with preloadSerif and post title", () => {
     const page = read("src/pages/blog/[slug].astro");
     expect(page).toContain("preloadSerif");
     expect(page).toMatch(/title=\{?/);
@@ -46,7 +46,7 @@ describe("TOC lateral do post (#24)", () => {
   const read = (p: string) =>
     readFileSync(resolve(__dirname, "..", p), "utf-8");
 
-  it("Toc.astro existe e recebe headings do post", () => {
+  it("Toc.astro exists and receives post headings", () => {
     const toc = read("components/Toc.astro");
     const page = read("pages/blog/[slug].astro");
     expect(toc).toContain("Nesta página");
@@ -55,7 +55,7 @@ describe("TOC lateral do post (#24)", () => {
     expect(page).toContain("headings");
   });
 
-  it("TOC só h2/h3, sticky, hidden lg:block, âncoras #slug", () => {
+  it("TOC only h2/h3, sticky, hidden lg:block, #slug anchors", () => {
     const toc = read("components/Toc.astro");
     expect(toc).toContain("depth === 2");
     expect(toc).toContain("depth === 3");
@@ -64,13 +64,13 @@ describe("TOC lateral do post (#24)", () => {
     expect(toc).toContain("href={`#${h.slug}`}");
   });
 
-  it("scroll-spy acompanha o scroll (listener ativo no script)", () => {
+  it("scroll-spy follows scroll (active listener in the script)", () => {
     const toc = read("components/Toc.astro");
     expect(toc).toContain('addEventListener("scroll"');
     expect(toc).toContain("border-l-primary");
   });
 
-  it("corpo tem estilos pra img, iframe, table e hr", () => {
+  it("body has styles for img, iframe, table and hr", () => {
     const page = read("pages/blog/[slug].astro");
     for (const seletor of ["img", "iframe", "table", "th", "td", "hr"]) {
       expect(page).toMatch(new RegExp(`:global\\(${seletor}\\)`));
@@ -100,15 +100,15 @@ describe("ajustes pós-review do Renan", () => {
 
   it("header e corpo compartilham da mesma medida (width 65ch fixa, sem 65ch dupla de fontes diferentes)", () => {
     const page = read("pages/blog/[slug].astro");
-    // a medida vive no wrapper comum, não no corpo sozinho
+    // the measure lives in the shared wrapper, not the body alone
     expect(page).toMatch(/width: 65ch[^"]*"[^>]*>\s*<header>/s);
-    // o corpo interno não REDEFINE a medida de leitura (65ch só no wrapper comum)
+    // the inner body does not redefine the reading measure (65ch only in wrapper)
     const medidas5ch = (page.match(/65ch/g) || []).length;
     expect(
       medidas5ch,
       "65ch deve aparecer 1x (wrapper) — header e corpo herdam",
     ).toBe(1);
-    // filhos de bloqueio limitados ao 100% da medida (pre/table não estouram)
+    // block children capped at 100% of the measure (pre/table never overflow)
     expect(page).toMatch(/max-width: 100%/);
   });
 

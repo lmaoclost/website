@@ -2,7 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import Toc from "../../components/Toc.astro";
 import { render } from "astro:content";
-import { getPosts, minutosDeLeitura, slugify } from "../../utils/blog";
+import { getPosts, readingTime, slugify } from "../../utils/blog";
 
 export async function getStaticPaths() {
   const posts = await getPosts();
@@ -15,8 +15,8 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
 const { title, description, tldr, pubDate, tags } = entry.data;
-const minutos = minutosDeLeitura(entry.body ?? "");
-const dataLegivel = pubDate.toLocaleDateString("pt-BR", {
+const minutos = readingTime(entry.body ?? "");
+const readableDate = pubDate.toLocaleDateString("pt-BR", {
   day: "2-digit",
   month: "long",
   year: "numeric",
@@ -54,7 +54,7 @@ const dataLegivel = pubDate.toLocaleDateString("pt-BR", {
             </details>
           )}
           <p class="font-mono text-xs text-muted-foreground mt-3 flex flex-wrap items-center gap-x-3">
-            <span>{dataLegivel}</span>
+            <span>{readableDate}</span>
             <span aria-hidden="true">·</span>
             <span>{minutos} min</span>
             {tags.length > 0 && (
@@ -85,7 +85,7 @@ const dataLegivel = pubDate.toLocaleDateString("pt-BR", {
   .blog-corpo :global(h4) {
     font-family: var(--font-sans);
     font-weight: 700;
-    /* âncora: título para no topo com folga da navbar sticky (h-14 + espaço) */
+    /* anchor: heading lands below the sticky navbar with breathing room */
     scroll-margin-top: 5.5rem;
   }
   .blog-corpo :global(h2) {
@@ -117,8 +117,8 @@ const dataLegivel = pubDate.toLocaleDateString("pt-BR", {
     padding: 1rem;
     overflow-x: auto;
     line-height: 1.6;
-    /* mobile: o bloco código não pode estourar a medida fixa;
-       rola internamente na própria caixa */
+    /* mobile: code block must not blow the fixed measure;
+       scrolls inside its own box */
     max-width: 100%;
     white-space: pre;
   }
@@ -156,7 +156,7 @@ const dataLegivel = pubDate.toLocaleDateString("pt-BR", {
     font-size: 0.875rem;
     border-collapse: collapse;
     margin-bottom: 1.5rem;
-    /* mobile: tabela larga rola dentro da própria medida */
+    /* mobile: wide table scrolls inside the measure */
     table-layout: auto;
     max-width: 100%;
   }

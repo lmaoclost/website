@@ -10,9 +10,9 @@ export interface Projeto {
   descricao: string;
   stack: string[];
   github: string;
-  /** deploy público do projeto (Website → não renderiza sem ele) */
+  /** public deploy (Website link only renders when this is set) */
   website?: string;
-  /** tipo do mock de screenshot: editor | browser | table (default: browser) */
+  /** screenshot mockup type: editor | browser | table (default: browser) */
   mock?: "editor" | "browser" | "table";
 }
 
@@ -24,9 +24,9 @@ export interface Hobby {
 export interface Profile {
   nome: string;
   role: string;
-  /** frase curta da intro (logo abaixo do role) */
+  /** short intro sentence (right under the role) */
   intro: string;
-  /** parágrafos da seção "Sobre mim" */
+  /** paragraphs of the "About me" section */
   bio: string[];
   experiencia: Experiencia[];
   projetos: Projeto[];
@@ -34,9 +34,9 @@ export interface Profile {
   contato: {
     github: string;
     linkedin: string;
-    /** mailto: só quando você decidir expor */
+    /** mailto: only set when you decide to expose it */
     email?: string;
-    /** caminho do PDF quando existir (ex: /cv.pdf) */
+    /** PDF path when it exists (e.g. /cv.pdf) */
     cv?: string;
   };
 }

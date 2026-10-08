@@ -10,9 +10,9 @@ export interface PostListItem {
 }
 
 export interface MonthGroup {
-  /** slug âncora: YYYY-MM */
+  /** anchor slug: YYYY-MM */
   id: string;
-  /** label legível: "2026 - Outubro" */
+  /** human label: "2026 - Outubro" */
   label: string;
   posts: PostListItem[];
 }
@@ -32,16 +32,16 @@ const MESES = [
   "Dezembro",
 ];
 
-export function labelDoMes(ano: number, mes: number): string {
+export function monthLabel(ano: number, mes: number): string {
   return `${ano} - ${MESES[mes]}`;
 }
 
-export function slugDoMes(ano: number, mes: number): string {
+export function monthSlug(ano: number, mes: number): string {
   return `${ano}-${String(mes + 1).padStart(2, "0")}`;
 }
 
-/** Agrupa por ano+mês preservando a ordem de entrada (mais recente primeiro). */
-export function agruparPorMes<
+/** Groups by year+month preserving input order (newest first). */
+export function groupPostsByMonth<
   T extends {
     pubDate: Date;
     title: string;
@@ -53,11 +53,11 @@ export function agruparPorMes<
   for (const post of posts) {
     const ano = post.pubDate.getUTCFullYear();
     const mes = post.pubDate.getUTCMonth();
-    const id = slugDoMes(ano, mes);
+    const id = monthSlug(ano, mes);
     if (!grupos.has(id)) {
       grupos.set(id, {
         id,
-        label: labelDoMes(ano, mes),
+        label: monthLabel(ano, mes),
         posts: [],
       });
     }
@@ -73,8 +73,8 @@ export function agruparPorMes<
   return [...grupos.values()];
 }
 
-export function slugify(titulo: string): string {
-  return titulo
+export function slugify(title: string): string {
+  return title
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
@@ -82,8 +82,8 @@ export function slugify(titulo: string): string {
     .replace(/^-|-$/g, "");
 }
 
-/** Estimativa de tempo de leitura: 200 palavras por minuto, mínimo 1. */
-export function minutosDeLeitura(texto: string): number {
+/** Reading time estimate: 200 words per minute, minimum 1. */
+export function readingTime(texto: string): number {
   const palavras = texto.trim().split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.ceil(palavras / 200));
 }
@@ -96,12 +96,12 @@ export async function getPosts() {
 }
 
 export async function getMonths(): Promise<MonthGroup[]> {
-  return agruparPorMes(
+  return groupPostsByMonth(
     (await getPosts()).map((p) => ({
       title: p.data.title,
       pubDate: p.data.pubDate,
       tags: p.data.tags,
-      minutos: minutosDeLeitura(p.body ?? ""),
+      minutos: readingTime(p.body ?? ""),
     })),
   );
 }

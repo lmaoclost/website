@@ -6,32 +6,32 @@ const root = resolve(__dirname, "../..");
 const read = (p: string) => readFileSync(resolve(root, p), "utf-8");
 
 describe("issue #26: Footer", () => {
-  it("src/components/Footer.astro existe e é importado pelo Layout após o conteúdo", () => {
+  it("Footer.astro exists and is imported by Layout after content", () => {
     const footer = read("src/components/Footer.astro");
     const layout = read("src/layouts/Layout.astro");
     expect(footer).toMatch(/<footer/);
     const posSlot = layout.indexOf("<slot");
-    // Footer renderiza depois do slot (a ocorrência via <Footer)
+    // Footer renders after the slot (the <Footer occurrence)
     const posRender = layout.indexOf("<Footer");
     expect(posRender).toBeGreaterThan(posSlot);
     expect(layout).toContain("Footer");
   });
 
-  it("footer no fim da página mesmo com conteúdo curto (wrapper flex-1 no slot)", () => {
+  it("footer sticks to page bottom with short content (flex-1 wrapper on slot)", () => {
     const layout = read("src/layouts/Layout.astro");
     expect(layout).toContain("flex-1");
     expect(layout).toMatch(/flex flex-col/);
-    // o wrapper que cresce em volta do slot de cada página
+    // the growing wrapper around each page's slot
     expect(layout).toMatch(/flex-1[^>]*>\s*<slot/);
   });
 
-  it("brand RENAN à esquerda apontando pra /", () => {
+  it("brand RENAN on the left pointing to /", () => {
     const footer = read("src/components/Footer.astro");
     expect(footer).toContain("RENAN");
     expect(footer).toMatch(/href="\/"/);
   });
 
-  it("links: RSS placeholder, GitHub externo seguro, About placeholder", () => {
+  it("links: RSS placeholder, secure external GitHub, About placeholder", () => {
     const footer = read("src/components/Footer.astro");
     expect(footer).toContain('href="/rss.xml"');
     expect(footer).toContain('href="https://github.com/lmaoclost"');
@@ -40,7 +40,7 @@ describe("issue #26: Footer", () => {
     expect(footer).toContain('rel="noopener noreferrer"');
   });
 
-  it("estilo: border-top, space-between, sans, text-xs, muted, max-w-6xl", () => {
+  it("style: border-top, space-between, sans, text-xs, muted, max-w-6xl", () => {
     const footer = read("src/components/Footer.astro");
     expect(footer).toMatch(/border-t\b.*border-border|border-border.*border-t/);
     expect(footer).toMatch(/justify-between|space-between/);
@@ -49,7 +49,7 @@ describe("issue #26: Footer", () => {
     expect(footer).toContain("max-w-6xl");
   });
 
-  it("sem JavaScript", () => {
+  it("no JavaScript", () => {
     const footer = read("src/components/Footer.astro");
     expect(footer).not.toMatch(/<script/);
     expect(footer).not.toContain("onclick");
