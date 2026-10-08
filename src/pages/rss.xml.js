@@ -4,10 +4,10 @@ import sanitizeHtml from "sanitize-html";
 import { getPosts, slugify } from "../utils/blog";
 
 const parser = new MarkdownIt();
-const LIMITE = 20;
+const FEED_LIMIT = 20;
 
 export async function GET(context) {
-  const posts = (await getPosts()).slice(0, LIMITE);
+  const posts = (await getPosts()).slice(0, FEED_LIMIT);
   return rss({
     title: "RENAN",
     description: "Blog do Renan sobre desenvolvimento de software",

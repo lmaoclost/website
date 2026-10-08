@@ -54,9 +54,11 @@ describe("issue #39: script de novo post", () => {
     const conteudo = readFileSync(arquivo, "utf-8");
     expect(conteudo).toContain('title: "Post de teste automatizado"');
     expect(conteudo).toMatch(/pubDate: \d{4}-\d{2}-\d{2}/);
-    expect(conteudo).toContain("description:");
-    expect(conteudo).toContain("tldr:");
+    // campos opcionais OMITIDOS (description: vazio é YAML null e quebra o schema)
+    expect(conteudo).not.toMatch(/^description:\s*$/m);
+    expect(conteudo).not.toMatch(/^tldr:\s*$/m);
     expect(conteudo).toContain("tags: []");
+    expect(conteudo).toContain("Opcionais do schema");
     rmSync(dir, { recursive: true, force: true });
   });
 
