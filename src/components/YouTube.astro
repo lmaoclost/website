@@ -1,0 +1,31 @@
+---
+// YouTube embed: lazy-loading, 16:9 fluid within the reading measure,
+// accessible title. Used from .mdx posts.
+import { slugify } from "../utils/slugify.ts";
+
+interface Props {
+  id: string;
+  title: string;
+}
+
+const { id, title } = Astro.props;
+---
+
+<iframe
+  src={`https://www.youtube.com/embed/${id}`}
+  title={title}
+  loading="lazy"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen
+></iframe>
+
+<style>
+  iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    border: 0;
+  }
+</style>
