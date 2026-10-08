@@ -1,0 +1,64 @@
+---
+// Navegador por títulos (H2/H3) do post, sticky à direita.
+// Links âncora gerados do corpo; ativo destacado por scroll-spy (IntersectionObserver).
+import type { MarkdownHeading } from "astro";
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+const h2h3 = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+<aside
+  id="post-toc"
+  class="hidden lg:block sticky top-24 text-sm w-56 shrink-0"
+  aria-label="Nesta página"
+>
+  <h2 class="font-semibold text-foreground mb-4">Nesta página</h2>
+  <ul class="space-y-1 border-l border-border">
+    {h2h3.map((h) => (
+      <li>
+        <a
+          href={`#${h.slug}`}
+          data-toc-link
+          data-depth={h.depth}
+          class="block py-1 text-muted-foreground hover:text-foreground border-l-2 border-transparent -ml-px pl-3 transition-colors"
+          class:list={[h.depth === 3 && "pl-6 text-xs"]}
+        >
+          {h.text}
+        </a>
+      </li>
+    ))}
+  </ul>
+</aside>
+
+<script>
+  // Scroll-spy: realça o link do título visível (padrão do Akita:
+  // navegação que acompanha o olho do usuário).
+  const links = document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]");
+  if (links.length > 0) {
+    const porId = new Map<string, HTMLAnchorElement>();
+    for (const a of links) {
+      porId.set(a.getAttribute("href")!.slice(1), a);
+    }
+
+    function atualizar() {
+      let idAtivo: string | null = null;
+      for (const id of porId.keys()) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        if (el.getBoundingClientRect().top <= 120) idAtivo = id;
+        else break;
+      }
+      for (const [id, a] of porId) {
+        const ativo = id === (idAtivo ?? [...porId.keys()][0]);
+        a.classList.toggle("text-foreground", ativo);
+        a.classList.toggle("border-l-primary", ativo);
+      }
+    }
+    window.addEventListener("scroll", atualizar, { passive: true });
+    atualizar();
+  }
+</script>

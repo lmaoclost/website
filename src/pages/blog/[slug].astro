@@ -1,0 +1,186 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Toc from "../../components/Toc.astro";
+import { render } from "astro:content";
+import { getPosts, minutosDeLeitura, slugify } from "../../utils/blog";
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((entry) => ({
+    params: { slug: slugify(entry.data.title) },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const { title, description, tldr, pubDate, tags } = entry.data;
+const minutos = minutosDeLeitura(entry.body ?? "");
+const dataLegivel = pubDate.toLocaleDateString("pt-BR", {
+  day: "2-digit",
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+});
+---
+
+<Layout title={title} preloadSerif>
+  <div class="mx-auto max-w-6xl px-4 flex gap-12 items-start lg:gap-16">
+    <article class="flex-1 min-w-0 pt-10 pb-16">
+      <div class="mx-auto" style="max-width: 65ch;">
+        <header>
+          <h1 class="text-3xl font-bold leading-tight">{title}</h1>
+          {description && (
+            <p class="text-muted-foreground mt-2 text-lg">{description}</p>
+          )}
+          {tldr && (
+            <details
+              class="mt-4 rounded-lg bg-card text-card-foreground border border-border group"
+              aria-label="TL;DR"
+            >
+              <summary class="list-none cursor-pointer select-none flex items-center justify-between px-4 py-3">
+                <span class="text-sm font-sans font-semibold text-muted-foreground uppercase tracking-wide">
+                  TL;DR
+                </span>
+                <span
+                  class="text-muted-foreground font-mono"
+                  aria-hidden="true"
+                >
+                  <span class="group-open:hidden">+</span>
+                  <span class="hidden group-open:inline">−</span>
+                </span>
+              </summary>
+              <p class="px-4 pb-4">{tldr}</p>
+            </details>
+          )}
+          <p class="font-mono text-xs text-muted-foreground mt-3 flex flex-wrap items-center gap-x-3">
+            <span>{dataLegivel}</span>
+            <span aria-hidden="true">·</span>
+            <span>{minutos} min</span>
+            {tags.length > 0 && (
+              <span class="flex gap-x-2.5">
+                {tags.map((t) => (
+                  <span>{"#" + t}</span>
+                ))}
+              </span>
+            )}
+          </p>
+        </header>
+
+        <div
+          class="mt-8 font-serif text-lg blog-corpo"
+          style="line-height: 1.5;"
+        >
+          <Content />
+        </div>
+      </div>
+    </article>
+    <Toc headings={headings} />
+  </div>
+</Layout>
+
+<style>
+  .blog-corpo :global(h2),
+  .blog-corpo :global(h3),
+  .blog-corpo :global(h4) {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    /* âncora: título para no topo com folga da navbar sticky (h-14 + espaço) */
+    scroll-margin-top: 5.5rem;
+  }
+  .blog-corpo :global(h2) {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  .blog-corpo :global(h3) {
+    font-size: 1.25rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .blog-corpo :global(p) {
+    margin-bottom: 1.5rem;
+  }
+  .blog-corpo :global(a) {
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .blog-corpo :global(a:hover) {
+    color: var(--primary-strong);
+  }
+  .blog-corpo :global(pre) {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    background: var(--muted);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    overflow-x: auto;
+    line-height: 1.6;
+    /* mobile: o bloco código não pode estourar a medida fixa;
+       rola internamente na própria caixa */
+    max-width: 100%;
+    white-space: pre;
+  }
+  .blog-corpo :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+  }
+  .blog-corpo :global(blockquote) {
+    border-left: 2px solid var(--primary);
+    padding-left: 1rem;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+  }
+  .blog-corpo :global(ul),
+  .blog-corpo :global(ol) {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+  }
+  .blog-corpo :global(img) {
+    border-radius: 0.5rem;
+    margin-inline: auto;
+    display: block;
+    margin-bottom: 1.5rem;
+  }
+  .blog-corpo :global(iframe) {
+    width: 100%;
+    aspect-ratio: 16/9;
+    height: auto;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .blog-corpo :global(table) {
+    width: 100%;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    /* mobile: tabela larga rola dentro da própria medida */
+    table-layout: auto;
+    max-width: 100%;
+  }
+  .blog-corpo :global(:where(table)) {
+    display: block;
+    overflow-x: auto;
+  }
+  .blog-corpo :global(th) {
+    text-align: left;
+    font-weight: 600;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 2px solid var(--border);
+  }
+  .blog-corpo :global(td) {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .blog-corpo :global(li) {
+    margin-bottom: 0.25rem;
+  }
+  .blog-corpo :global(hr) {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 2rem auto;
+    width: 60%;
+  }
+</style>
