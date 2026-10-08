@@ -4,16 +4,17 @@ import GithubIcon from "./icons/GithubIcon.astro";
 import LinkedinIcon from "./icons/LinkedinIcon.astro";
 import SunIcon from "./icons/SunIcon.astro";
 import MoonIcon from "./icons/MoonIcon.astro";
+import SearchIcon from "./icons/SearchIcon.astro";
 
+// Nav fixa em todas as páginas (padrão do Akita): os dois itens
+// aparecem sempre, sem ocultar a rota atual.
 const itens = [
   { nome: "Projects", href: "/projects" },
   { nome: "About", href: "/about" },
 ];
 ---
 
-<header
-  class="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm"
->
+<header class="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
   <nav aria-label="Navegação principal" class="mx-auto max-w-6xl">
     <div class="flex h-14 items-center justify-between px-4">
       <div class="flex items-center gap-7">
@@ -24,16 +25,14 @@ const itens = [
           RENAN
         </a>
         <div class="hidden md:flex items-center gap-6">
-          {
-            itens.map((it) => (
-              <a
-                href={it.href}
-                class="text-sm text-muted-foreground hover:text-foreground"
-              >
-                {it.nome}
-              </a>
-            ))
-          }
+          {itens.map((it) => (
+            <a
+              href={it.href}
+              class="text-sm text-muted-foreground hover:text-foreground"
+            >
+              {it.nome}
+            </a>
+          ))}
         </div>
       </div>
 
@@ -56,11 +55,34 @@ const itens = [
         >
           <LinkedinIcon />
         </a>
+        <form
+          role="search"
+          aria-label="Buscar no site"
+          id="navbar-search-form"
+          class="hidden md:block relative w-64"
+        >
+          <input
+            type="search"
+            name="q"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Buscar..."
+            aria-label="Buscar no site"
+            aria-keyshortcuts="Control+K Meta+K"
+            class="block w-full appearance-none rounded-lg bg-foreground/5 px-3 py-2 text-sm leading-tight text-foreground placeholder:text-muted-foreground outline-none transition-colors focus:bg-background focus:ring-1 focus:ring-ring"
+          />
+          <kbd
+            class="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 select-none rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground"
+            aria-hidden="true"
+          >
+            ⌘K
+          </kbd>
+        </form>
         <button
           type="button"
           id="navbar-theme-toggle"
           aria-label="Alternar tema"
-          class="rounded p-1.5 text-muted-foreground hover:text-foreground hover:bg-accent"
+          class="flex rounded p-1.5 text-muted-foreground hover:text-foreground hover:bg-accent"
           onclick="toggleTheme()"
         >
           <span class="dark:hidden flex">
@@ -69,6 +91,15 @@ const itens = [
           <span class="hidden dark:flex">
             <MoonIcon />
           </span>
+        </button>
+        <button
+          type="button"
+          id="mobile-search-btn"
+          aria-label="Buscar"
+          aria-controls="mobile-search"
+          class="md:hidden rounded p-1.5 text-muted-foreground hover:text-foreground hover:bg-accent"
+        >
+          <SearchIcon />
         </button>
         <button
           type="button"
@@ -83,6 +114,85 @@ const itens = [
       </div>
     </div>
   </nav>
+  <div class="md:hidden hidden px-4 pb-2" id="mobile-search">
+    <form
+      role="search"
+      aria-label="Buscar no site"
+      class="flex items-center gap-2 rounded-lg border border-border bg-muted/40 px-3 py-2"
+    >
+      <span class="text-muted-foreground">
+        <SearchIcon />
+      </span>
+      <input
+        type="search"
+        name="q"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="Buscar..."
+        aria-label="Buscar no site"
+        class="h-6 w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
+      />
+    </form>
+  </div>
 </header>
 
 <MobileMenu client:load itens={itens} />
+
+<script is:inline>
+  (function () {
+    // Busca estilo Akita: submit abre o Google com site:<hostname>.
+    // Dominio dinamico (window.location.hostname): funciona em
+    // localhost, preview e no dominio de producao sem configuracao.
+    function montarUrlBusca(form) {
+      var termo = form.q.value.trim();
+      if (!termo) return null;
+      var dominio = window.location.hostname;
+      var consulta = "site:" + dominio + " " + termo;
+      return "https://www.google.com/search?q=" + encodeURIComponent(consulta);
+    }
+
+    var form = document.getElementById("navbar-search-form");
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var url = montarUrlBusca(form);
+      if (url) window.open(url, "_blank", "noopener");
+    });
+
+    var formMobile = document
+      .getElementById("mobile-search")
+      .querySelector("form");
+    formMobile.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var url = montarUrlBusca(formMobile);
+      if (url) window.open(url, "_blank", "noopener");
+    });
+
+    var input = form.querySelector("input");
+    var inputMobile = formMobile.querySelector("input");
+
+    // Atalho global: ⌘K / Ctrl+K foca o campo da navbar.
+    document.addEventListener("keydown", function (e) {
+      if ((e.metaKey || e.ctrlKey) && (e.key === "k" || e.key === "K")) {
+        e.preventDefault();
+        input.focus();
+        return;
+      }
+      if (e.key === "Escape") {
+        input.blur();
+        inputMobile.blur();
+      }
+    });
+
+    // Mobile: botao de lupa revela a barra de busca.
+    var searchBtn = document.getElementById("mobile-search-btn");
+    if (searchBtn) {
+      searchBtn.addEventListener("click", function () {
+        var barra = document.getElementById("mobile-search");
+        barra.classList.toggle("hidden");
+        if (!barra.classList.contains("hidden")) {
+          inputMobile.focus();
+        }
+      });
+    }
+  })();
+</script>

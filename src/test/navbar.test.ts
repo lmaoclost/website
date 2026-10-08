@@ -68,4 +68,34 @@ describe("issue #25: Navbar", () => {
     expect(navbar).toContain('aria-label="Alternar tema"');
   });
 
+  it("busca: form com submit pro Google usando site: da pr\u00f3pria hostname (#32)", () => {
+    const navbar = read("src/components/Navbar.astro");
+    expect(navbar).toMatch(/<form[^>]*role="search"/);
+    expect(navbar).toContain('type="search"');
+    expect(navbar).toContain("google.com/search");
+    expect(navbar).toContain("site:");
+    expect(navbar).toContain("window.location.hostname");
+    expect(navbar).toContain("Buscar");
+    expect(navbar).toContain('aria-label="Buscar no site"');
+  });
+
+  it("busca: atalho \u2318K/Ctrl+K foca o input", () => {
+    const navbar = read("src/components/Navbar.astro");
+    expect(navbar).toMatch(/metaKey|ctrlKey/);
+    expect(navbar).toMatch(/key === "k"/);
+    expect(navbar).toMatch(/\.focus\(/);
+  });
+
+  it("busca: botao \u2318K disabled saiu da navbar", () => {
+    const navbar = read("src/components/Navbar.astro");
+    expect(navbar).not.toMatch(/cursor-not-allowed/);
+    expect(navbar).not.toContain("em breve");
+  });
+
+  it("busca: botao de lupa no mobile revela barra", () => {
+    const navbar = read("src/components/Navbar.astro");
+    expect(navbar).toContain("SearchIcon");
+    expect(navbar).toMatch(/md:hidden/);
+    expect(navbar).toContain("mobile-search");
+  });
 });
