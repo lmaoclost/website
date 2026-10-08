@@ -31,9 +31,27 @@ describe("issue #25: Navbar", () => {
     expect(navbar).toContain("it.nome");
   });
 
-  it("direita: placeholder de busca com aria + toggle de tema", () => {
+  it("GitHub e LinkedIn com ícones, link externo seguro, à esquerda do ⌘K", () => {
     const navbar = read("src/components/Navbar.astro");
-    expect(navbar).toContain('aria-label="Buscar"');
+    expect(navbar).toContain('href="https://github.com/lmaoclost"');
+    expect(navbar).toContain(
+      'href="https://www.linkedin.com/in/renansmoliveira/"',
+    );
+    expect(navbar).toContain('aria-label="GitHub"');
+    expect(navbar).toContain('aria-label="LinkedIn"');
+    expect(navbar.match(/target="_blank"/g)?.length).toBe(2);
+    expect(navbar.match(/rel="noopener noreferrer"/g)?.length).toBe(2);
+    expect(navbar).toContain("GithubIcon");
+    expect(navbar).toContain("LinkedinIcon");
+  });
+
+  it("toggle de tema usa sol/lua com visibilidade controlada por classe dark", () => {
+    const navbar = read("src/components/Navbar.astro");
+    expect(navbar).toContain("SunIcon");
+    expect(navbar).toContain("MoonIcon");
+    expect(navbar).toContain("dark:hidden");
+    expect(navbar).toContain("hidden dark:flex");
+    expect(navbar).not.toContain("◐");
     expect(navbar).toContain("toggleTheme()");
   });
 
@@ -49,4 +67,5 @@ describe("issue #25: Navbar", () => {
     expect(navbar).toMatch(/<nav[^>]+aria-label/);
     expect(navbar).toContain('aria-label="Alternar tema"');
   });
+
 });
