@@ -21,14 +21,6 @@ describe("issue #44: embeds com MDX", () => {
     expect(component).toMatch(/title=/);
   });
 
-  it("post de demonstração .mdx existe (temporário, não commitado)", () => {
-    const path = resolve(root, "src/content/blog/post-demo-mdx.mdx");
-    expect(existsSync(path)).toBe(true);
-    const post = read("src/content/blog/post-demo-mdx.mdx");
-    expect(post).toContain("YouTube");
-    expect(post).toContain("## ");
-  });
-
   it("collection aceita .md e .mdx (glob pattern)", () => {
     const config = read("src/content.config.ts");
     expect(config).toContain("md");
